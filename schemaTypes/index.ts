@@ -5,6 +5,7 @@ import product from "./documents/product";
 import localizedString from "./objects/i18n/localizedString";
 import localizedText from "./objects/i18n/localizedText";
 import localizedUrl from "./objects/i18n/localizedUrl";
+import objectModule from "./objects/objectModule";
 
 export const schemaTypes = [
     // Documents
@@ -17,4 +18,5 @@ export const schemaTypes = [
     localizedString,
     localizedText,
     localizedUrl,
+    objectModule,
 ]

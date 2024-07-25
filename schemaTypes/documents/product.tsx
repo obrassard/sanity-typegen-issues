@@ -44,6 +44,7 @@ export default defineType({
           name: 'ref.module.textImageBlock',
           to: [{type: 'module.textImageBlock'}],
         },
+        {type: 'module.objectBlock'},
       ],
     }),
   ],

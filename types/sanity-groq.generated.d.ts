@@ -68,6 +68,11 @@ export type Geopoint = {
   alt?: number
 }
 
+export type ModuleObjectBlock = {
+  _type: 'module.objectBlock'
+  title: LocalizedString
+}
+
 export type LocalizedUrl = {
   _type: 'localizedUrl'
   fr: string
@@ -97,6 +102,9 @@ export type Product = {
         _key: string
         [internalGroqTypeReferenceTo]?: 'module.textImageBlock'
       }
+    | ({
+        _key: string
+      } & ModuleObjectBlock)
   >
 }
 
@@ -240,6 +248,7 @@ export type AllSanitySchemaTypes =
   | SanityImageDimensions
   | SanityFileAsset
   | Geopoint
+  | ModuleObjectBlock
   | LocalizedUrl
   | Product
   | Article
@@ -267,9 +276,35 @@ export type SanityBlogArticleQueryResult = {
 } | null
 // Source: ./groq/product.queries.ts
 // Variable: SanityProductModulesQuery
-// Query: *[_type == 'product' && slug.current == $slug][0] {    "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),    "slug": slug.current,    modules[] {        _type == 'ref.module.textBlock' => @ -> {            _type,            "_key": ^._key,            "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),            "body": select(  $lang == "en" => body.en,  $lang == "fr" => body.fr,),        },        _type == 'ref.module.textImageBlock' => @ -> {            _type,            "_key": ^._key,            "subTitle": select(  $lang == "en" => subTitle.en,  $lang == "fr" => subTitle.fr,),            "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),            "body": select(  $lang == "en" => body.en,  $lang == "fr" => body.fr,),            image        },    }}
+// Query: *[_type == 'product' && slug.current == $slug][0] {    "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),    "slug": slug.current,    modules[] {        _key,        _type == 'module.objectBlock' => {            _type,            "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),        },        ...(@ -> {            _type == 'module.textBlock' => {                _type,                "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),                "body": select(  $lang == "en" => body.en,  $lang == "fr" => body.fr,),            },            _type == 'module.textImageBlock' =>  {                _type,                "subTitle": select(  $lang == "en" => subTitle.en,  $lang == "fr" => subTitle.fr,),                "title": select(  $lang == "en" => title.en,  $lang == "fr" => title.fr,),                "body": select(  $lang == "en" => body.en,  $lang == "fr" => body.fr,),                image            },        })    }}
 export type SanityProductModulesQueryResult = {
   title: string
   slug: string
-  modules: Array<{}>
+  modules: Array<
+    | {
+        _key: string
+        _type: 'module.textBlock'
+        title: string
+        body: string
+      }
+    | {
+        _key: string
+        _type: 'module.textImageBlock'
+        subTitle: string | null
+        title: string
+        body: string
+        image: {
+          asset?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+          }
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
+      }
+    | unknown
+  >
 } | null

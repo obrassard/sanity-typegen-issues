@@ -12,19 +12,24 @@ export const SanityProductModulesQuery = groq`
     "title": ${localized('title')},
     "slug": slug.current,
     modules[] {
-        _type == 'ref.module.textBlock' => @ -> {
+        _key,
+        _type == 'module.objectBlock' => {
             _type,
-            "_key": ^._key,
             "title": ${localized('title')},
-            "body": ${localized('body')},
         },
-        _type == 'ref.module.textImageBlock' => @ -> {
-            _type,
-            "_key": ^._key,
-            "subTitle": ${localized('subTitle')},
-            "title": ${localized('title')},
-            "body": ${localized('body')},
-            image
-        },
+        ...(@ -> {
+            _type == 'module.textBlock' => {
+                _type,
+                "title": ${localized('title')},
+                "body": ${localized('body')},
+            },
+            _type == 'module.textImageBlock' =>  {
+                _type,
+                "subTitle": ${localized('subTitle')},
+                "title": ${localized('title')},
+                "body": ${localized('body')},
+                image
+            },
+        })
     }
 }`
