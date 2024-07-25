@@ -110,20 +110,12 @@ export type Article = {
   slug: Slug
   summary: LocalizedText
   modules: Array<
-    | {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
+    | ({
         _key: string
-        [internalGroqTypeReferenceTo]?: 'module.textBlock'
-      }
-    | {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
+      } & ModuleTextBlock)
+    | ({
         _key: string
-        [internalGroqTypeReferenceTo]?: 'module.textImageBlock'
-      }
+      } & ModuleTextImageBlock)
   >
 }
 
@@ -134,11 +126,7 @@ export type Slug = {
 }
 
 export type ModuleTextImageBlock = {
-  _id: string
   _type: 'module.textImageBlock'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
   title: LocalizedString
   subTitle?: LocalizedString
   body: LocalizedText
@@ -213,11 +201,7 @@ export type SanityImageMetadata = {
 }
 
 export type ModuleTextBlock = {
-  _id: string
   _type: 'module.textBlock'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
   title: LocalizedString
   body: LocalizedText
 }
@@ -263,7 +247,22 @@ export type SanityBlogArticleQueryResult = {
   title: string
   slug: string
   summary: string
-  modules: Array<{}>
+  modules: Array<
+    | {
+        _key: string
+        _type: 'module.textBlock'
+        subTitle: null
+        title: string
+        body: string
+        image: null
+      }
+    | {
+        _key: string
+        _type: 'module.textImageBlock'
+        title: string
+        body: string
+      }
+  >
 } | null
 // Source: ./groq/product.queries.ts
 // Variable: SanityProductModulesQuery
