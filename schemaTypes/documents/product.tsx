@@ -38,12 +38,7 @@ export default defineType({
       group: 'editorial',
       validation: (Rule) => Rule.required(),
       of: [
-        {type: 'reference', name: 'ref.module.textBlock', to: [{type: 'module.textBlock'}]},
-        {
-          type: 'reference',
-          name: 'ref.module.textImageBlock',
-          to: [{type: 'module.textImageBlock'}],
-        },
+        {type: 'reference', to: [{type: 'module.textBlock'}, {type: 'module.textImageBlock'}]},
       ],
     }),
   ],
